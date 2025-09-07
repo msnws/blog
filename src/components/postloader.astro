@@ -1,0 +1,50 @@
+---
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort(
+    (a: any, b: any) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<ul>
+    {
+        posts.map((post: any) => (
+            <li>
+                <a href={`/blog/${post.slug}/`}>
+                    {post.data.image && (
+                        <img
+                            src={post.data.image.url}
+                            alt={post.data.image.alt}
+                            width="300"
+                        />
+                    )}
+                    <h2>{post.data.title}</h2>
+                    <p>{post.data.description}</p>
+                    <time datetime={post.data.pubDate.toISOString()}>
+                        {post.data.pubDate.toDateString()}
+                    </time>
+                </a>
+            </li>
+        ))
+    }
+</ul>
+
+<style>
+    ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    li {
+        border: 1px solid black;
+        width: 50%;
+        padding: 2rem;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
